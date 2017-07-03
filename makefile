@@ -13,7 +13,7 @@ OBJECTS=$(addsuffix .o,$(basename $(SOURCES)))
 CFLAGS= 
 CPPFLAGS= -Iinclude/
 CXXFLAGS=-g -std=c++11 -Wall
-LDFLAGS = $(INCLUDE_PATHS) $(LIBRARY_PATHS) -framework OpenGL -lglew
+LDFLAGS = $(INCLUDE_PATHS) $(LIBRARY_PATHS) -framework OpenGL -lglfw
 
 boids: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $(BUILD_DIR)/$@ $^ 
