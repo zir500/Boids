@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 CXX=g++
 
 INCLUDE_PATHS = -I/usr/local/include -I/opt/X11/include -Iinclude/
@@ -21,3 +21,7 @@ boids: $(OBJECTS)
 .PHONY: clean
 clean: 
 	rm $(OBJECTS) boids 
+
+.PHONY: run
+run: boids
+	$(BUILD_DIR)/boids
