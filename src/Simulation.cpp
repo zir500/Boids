@@ -8,7 +8,10 @@ void Simulation::Init(int windowWidth, int windowHeight){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	
+	#ifdef _WIN32
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif 
 
 	this->window = glfwCreateWindow(windowWidth, windowHeight, "Boids Simulation", NULL, NULL);
 	if (this->window == NULL){
@@ -24,17 +27,41 @@ void Simulation::Init(int windowWidth, int windowHeight){
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	glfwSetFramebufferSizeCallback(this->window, Simulation::frameBufferSizeCallback);
+
+
+	std::cout << "Creating Boid VAO" << std::endl;
+	unsigned int BoidVAO = Boid::createBoidVAO();	
+
+	//Generate Boids
+	std::cout << "Generating Boids" << std::endl;
+	for(int i=0; i<10; i++){
+		this->boids.push_back(new Boid(BoidVAO, glm::vec3((float)i, (float)(10-i), 0.0f)));
+	}
+
+	this->lastTickTime = glfwGetTime();
 }
 
-void Simulation::Render(ShaderProgram* shaderProgram){
+void Simulation::Render(ShaderProgram* shaderProgram, int windowWidth, int windowHeight){
 	glClearColor(0.2f, 0.3, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	shaderProgram->use()
-	glBindVertexArray();
+	shaderProgram->use();
 
-	for(const Boid b : this->boids){
-		shaderProgram.set();
+	glm::mat4 view;
+	glm::mat4 projection;
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	projection = glm::perspective(glm::radians(45.0f), (float)windowWidth/(float)windowHeight, 1.0f, 100.0f);
+	shaderProgram->set("view", view);
+        shaderProgram->set("projection", projection);
+
+	for(Boid* b : this->boids){
+		glm::mat4 model;
+
+		model = glm::translate(model, b->getPosition());
+
+		
+		glBindVertexArray(b->getVAO());
+		shaderProgram->set("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
@@ -44,13 +71,45 @@ void Simulation::Render(ShaderProgram* shaderProgram){
 }
 
 void Simulation::Tick(){
+	float currentTickTime = glfwGetTime();
 	
+	for(Boid* b : this->boids){
+		b->updateVelocity(&(this->boids), currentTickTime-this->lastTickTime);	
+	}
+
+	for(Boid* b : this->boids){
+		b->step();	
+	}
+	this->lastTickTime = currentTickTime;
 }
 
 Simulation::~Simulation(){
+	//Free Boids
+	for(const Boid* b : this->boids){
+		delete b;
+	}
+
 	glfwTerminate();
 }
 
 void Simulation::frameBufferSizeCallback(GLFWwindow* window, int width, int height){
 	glViewport(0, 0, width, height);
+}
+
+
+Simulation::Simulation(){
+	this->Init(500, 500);
+
+	ShaderProgram::ShaderProgram shader("src/vertexShader.vert", "src/fragmentShader.frag");
+	
+	 while (1){
+		this->Tick();
+		this->Render(&shader, 500, 500);
+	 }
+
+}
+
+int main(){
+	Simulation::Simulation simulation;
+	return 0;
 }

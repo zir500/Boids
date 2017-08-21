@@ -52,7 +52,7 @@ std::string ShaderProgram::getInfoLog(int shader){
 	return infoLogStr;
 }
 
-std::string loadShader(const char* filePath){
+std::string ShaderProgram::loadShader(const char* filePath){
     std::string content;
     std::ifstream fileStream(filePath, std::ios::in);
 
@@ -81,5 +81,5 @@ void ShaderProgram::use(){
 
 void ShaderProgram::set(const char* uniform, glm::mat4 value){
 	int uniformLocation = glGetUniformLocation(this->program, uniform);
-	glUniform4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(value));	
+	glUniform4fv(uniformLocation, 1, glm::value_ptr(value));	
 }
