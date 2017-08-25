@@ -100,7 +100,7 @@ void Simulation::frameBufferSizeCallback(GLFWwindow* window, int width, int heig
 Simulation::Simulation(){
 	this->Init(500, 500);
 
-	ShaderProgram::ShaderProgram shader("src/vertexShader.vert", "src/fragmentShader.frag");
+	ShaderProgram shader("../src/vertexShader.vert", "../src/fragmentShader.frag");
 	
 	 while (1){
 		this->Tick();
@@ -110,6 +110,6 @@ Simulation::Simulation(){
 }
 
 int main(){
-	Simulation::Simulation simulation;
+	Simulation simulation;
 	return 0;
 }

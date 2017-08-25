@@ -8,23 +8,23 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 set(SRCS src/Simulation.cpp
-	src/ShaderProgram.cpp
-	src/Boid.cpp
-	src/glad.c
-	)
+		src/ShaderProgram.cpp
+		src/Boid.cpp
+		src/glad.c
+		)
 
-#find_package(OpenGL)
+find_package(OpenGL)
+add_subdirectory(glfw)
+include_directories("glfw/include")
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
 
 
 # The following folder will be included
-include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/include/" ${GLFW_INCLUDE_DIRS}) 
+include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/include/" ${GLFW_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/")
 
 add_executable(boids "${SRCS}")
 
-target_link_libraries(boids ${GLFW_STATIC_LIBRARIES})
+target_link_libraries(boids glfw ${GLFW_STATIC_LIBRARIES})
 
 
 
