@@ -16,7 +16,7 @@ class ShaderProgram{
 	int program;
 
 	public:
-		ShaderProgram(const char*, const char*);
+		ShaderProgram(std::string, std::string);
 		~ShaderProgram();
 		void use();
 		void set(const char*, glm::mat4);	
@@ -24,7 +24,7 @@ class ShaderProgram{
 	private:
 		static int isCompilationSuccessfull(int);
 		static std::string getInfoLog(int);
-		static std::string loadShader(const char* filePath);
+		static std::string loadShader(std::string filePath);
 };
 
 #endif //SHADER_PROGRAM_H__

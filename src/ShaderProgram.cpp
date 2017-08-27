@@ -1,6 +1,6 @@
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath){
+ShaderProgram::ShaderProgram(std::string vertexShaderPath, std::string fragmentShaderPath){
 	std::string vertexShaderString = ShaderProgram::loadShader(vertexShaderPath);
 	std::string fragmentShaderString = ShaderProgram::loadShader(fragmentShaderPath);
 
@@ -52,7 +52,7 @@ std::string ShaderProgram::getInfoLog(int shader){
 	return infoLogStr;
 }
 
-std::string ShaderProgram::loadShader(const char* filePath){
+std::string ShaderProgram::loadShader(std::string filePath){
     std::string content;
     std::ifstream fileStream(filePath, std::ios::in);
 

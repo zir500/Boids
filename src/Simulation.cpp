@@ -1,5 +1,4 @@
-#include "simulation.h"
-
+#include "Simulation.h"
 
 void Simulation::Init(int windowWidth, int windowHeight){
 	//Setup a window.
@@ -9,7 +8,7 @@ void Simulation::Init(int windowWidth, int windowHeight){
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	#ifdef _WIN32
+	#ifdef __APPLE__
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	#endif 
 
@@ -100,7 +99,11 @@ void Simulation::frameBufferSizeCallback(GLFWwindow* window, int width, int heig
 Simulation::Simulation(){
 	this->Init(500, 500);
 
-	ShaderProgram shader("../src/vertexShader.vert", "../src/fragmentShader.frag");
+	std::string vertexShaderSource = "shaders/vertexShader.vert";
+	std::string fragmentShaderSource = "shaders/fragmentShader.frag";
+
+
+	ShaderProgram shader(vertexShaderSource, fragmentShaderSource );
 	
 	 while (1){
 		this->Tick();
@@ -109,7 +112,7 @@ Simulation::Simulation(){
 
 }
 
-int main(){
+int main(int argc, char* argv[]){
 	Simulation simulation;
 	return 0;
 }

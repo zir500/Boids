@@ -3,8 +3,8 @@ set (CMAKE_CXX_STANDARD 11)
 
 
 project(Boids)
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+#set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 set(SRCS src/Simulation.cpp
@@ -12,6 +12,8 @@ set(SRCS src/Simulation.cpp
 		src/Boid.cpp
 		src/glad.c
 		)
+
+set(SHADERS src/shaders)
 
 find_package(OpenGL)
 add_subdirectory(glfw)
@@ -22,10 +24,18 @@ include_directories("glfw/include")
 # The following folder will be included
 include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/include/" ${GLFW_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/")
 
+# Moves the shader files into the binary directory
+
 add_executable(boids "${SRCS}")
 
 target_link_libraries(boids glfw ${GLFW_STATIC_LIBRARIES})
 
-
+# Move shader sources to output directory
+add_custom_command(
+        TARGET boids POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_SOURCE_DIR}/${SHADERS}
+		${EXECUTABLE_OUTPUT_PATH}/shaders
+)
 
 install(TARGETS boids DESTINATION bin)
