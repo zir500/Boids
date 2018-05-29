@@ -2,8 +2,11 @@
 
 void Simulation::Init(int windowWidth, int windowHeight){
 	//Setup a window.
-	
-	glfwInit();
+	std::cout << "Creating Window" << std::endl;
+
+	if (!glfwInit()) {
+		throw std::runtime_error("Failed ot Initialize GLFW");
+	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -14,12 +17,14 @@ void Simulation::Init(int windowWidth, int windowHeight){
 
 	this->window = glfwCreateWindow(windowWidth, windowHeight, "Boids Simulation", NULL, NULL);
 	if (this->window == NULL){
+		std::cout << "Couldnt Create GLFW Window" << std::endl;
 		throw std::runtime_error("Could not create GLFW window.");
 		
 	}
 	
 	glfwMakeContextCurrent(this->window);
 
+	std::cout << "Initializing GLAD" << std::endl;
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
 		throw std::runtime_error("Could not initialise GLAD");
 	}
@@ -34,7 +39,7 @@ void Simulation::Init(int windowWidth, int windowHeight){
 	//Generate Boids
 	std::cout << "Generating Boids" << std::endl;
 	for(int i=0; i<10; i++){
-		this->boids.push_back(new Boid(BoidVAO, glm::vec3((float)i, (float)(10-i), 0.0f)));
+		this->boids.push_back(new Boid(BoidVAO, glm::vec3(10.0f, 10.0f, 0.0f)));
 	}
 
 	this->lastTickTime = glfwGetTime();
@@ -97,6 +102,7 @@ void Simulation::frameBufferSizeCallback(GLFWwindow* window, int width, int heig
 
 
 Simulation::Simulation(){
+	std::cout << "Starting Simulation..." << std::endl;
 	this->Init(500, 500);
 
 	std::string vertexShaderSource = "shaders/vertexShader.vert";
@@ -106,7 +112,7 @@ Simulation::Simulation(){
 	ShaderProgram shader(vertexShaderSource, fragmentShaderSource );
 	
 	 while (1){
-		this->Tick();
+		//this->Tick();
 		this->Render(&shader, 500, 500);
 	 }
 
