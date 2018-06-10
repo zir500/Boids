@@ -19,7 +19,6 @@ void Simulation::Init(int windowWidth, int windowHeight){
 	if (this->window == NULL){
 		std::cout << "Couldnt Create GLFW Window" << std::endl;
 		throw std::runtime_error("Could not create GLFW window.");
-		
 	}
 	
 	glfwMakeContextCurrent(this->window);
@@ -105,8 +104,8 @@ Simulation::Simulation(){
 	std::cout << "Starting Simulation..." << std::endl;
 	this->Init(500, 500);
 
-	std::string vertexShaderSource = "shaders/vertexShader.vert";
-	std::string fragmentShaderSource = "shaders/fragmentShader.frag";
+	std::string vertexShaderSource = EXECUTABLE_PATH + "\\..\\shaders\\vertexShader.vert";
+	std::string fragmentShaderSource = EXECUTABLE_PATH + "\\..\\shaders\\fragmentShader.frag";
 
 
 	ShaderProgram shader(vertexShaderSource, fragmentShaderSource );
@@ -119,6 +118,8 @@ Simulation::Simulation(){
 }
 
 int main(int argc, char* argv[]){
+	EXECUTABLE_PATH = std::string(argv[0]);
+	EXECUTABLE_PATH = EXECUTABLE_PATH.substr(0, EXECUTABLE_PATH.find_last_of("\\/"));
 	Simulation simulation;
 	return 0;
 }

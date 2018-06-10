@@ -13,6 +13,8 @@
 #include "ShaderProgram.h"
 #include "Boid.h"
 
+std::string EXECUTABLE_PATH;
+
 class Simulation{
 	GLFWwindow* window;
 
